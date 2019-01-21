@@ -295,6 +295,7 @@ namespace BugNET.Providers.DataProviders
                         Name = returnData.GetString(returnData.GetOrdinal("ProjectName")),
                         Description = returnData.GetString(returnData.GetOrdinal("ProjectDescription")),
                         CreatorUserName = returnData.GetString(returnData.GetOrdinal("CreatorUserName")),
+                        AttachmentStorageType= (IssueAttachmentStorageTypes)returnData["AttachmentStorageType"],
                         CreatorDisplayName = returnData.GetString(returnData.GetOrdinal("CreatorDisplayName")),
                         AllowAttachments = returnData.GetBoolean(returnData.GetOrdinal("AllowAttachments")),
                         AccessType = (ProjectAccessType)returnData["ProjectAccessType"],

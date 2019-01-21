@@ -75,7 +75,7 @@
 			AssociatedControlID="AttachmentStorageType" meta:resourcekey="AttachmentStorageTypeLabel" runat="server" Text="Storage Type"></asp:Label>
 		<div class="col-md-8">
 			<asp:RadioButtonList ID="AttachmentStorageType" CssClass="radio" RepeatLayout="Flow" RepeatDirection="Vertical" runat="server">
-				<asp:ListItem Text="Database" Selected="True" Value="2" meta:resourcekey="AttachmentStorageTypeDb" />
+				<asp:ListItem Text="Database" Value="2" meta:resourcekey="AttachmentStorageTypeDb" />
 				<asp:ListItem Text="File System" Value="1" meta:resourcekey="AttachmentStorageTypeFs" />
 			</asp:RadioButtonList>
 		</div>

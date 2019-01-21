@@ -2764,6 +2764,10 @@
       <Project>{D10EDECB-ADB2-4E5F-93A6-00D09E86B906}</Project>
       <Name>BugNET.MailboxReader</Name>
     </ProjectReference>
+    <ProjectReference Include="..\BugNET.MailboxSender\BugNET.MailboxSender.csproj">
+      <Project>{04babe0a-ecf5-4206-a4b6-2c99c3542275}</Project>
+      <Name>BugNET.MailboxSender</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Library\HttpModules\Authentication\HttpModule.Authentication.csproj">
       <Project>{72be8d7e-b026-45ee-8613-dfb1bb70fd02}</Project>
       <Name>HttpModule.Authentication</Name>

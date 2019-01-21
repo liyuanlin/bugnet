@@ -9302,7 +9302,7 @@
         <member name="M:LumiSoft.Net.IMAP.IMAP_Utils.Encode_IMAP_UTF7_String(System.String)">
             <summary>
             Encodes specified data with IMAP modified UTF7 encoding. Defined in RFC 3501 5.1.3.  Mailbox International Naming Convention.
-            Example: öö is encoded to &amp;APYA9g-.
+            Example: 鲻 is encoded to &amp;APYA9g-.
             </summary>
             <param name="text">Text to encode.</param>
             <returns></returns>
@@ -9310,7 +9310,7 @@
         <member name="M:LumiSoft.Net.IMAP.IMAP_Utils.Decode_IMAP_UTF7_String(System.String)">
             <summary>
             Decodes IMAP modified UTF7 encoded data. Defined in RFC 3501 5.1.3.  Mailbox International Naming Convention.
-            Example: &amp;APYA9g- is decoded to öö.
+            Example: &amp;APYA9g- is decoded to 鲻.
             </summary>
             <param name="text">Text to encode.</param>
             <returns></returns>

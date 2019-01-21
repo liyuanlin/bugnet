@@ -53,7 +53,7 @@
                     </button> 
                     <a class="navbar-brand navbar-brand-img" runat="server" href="~/">
                         <img runat="server" src="~/images/logo.png" height="40" width="40" alt="" />
-                        <span class="site-name-text">BugNET</span>
+                        <span class="site-name-text">任务管理</span>
                     </a>
                 </div>
                 <div class="navbar-collapse collapse">

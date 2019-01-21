@@ -131,7 +131,8 @@ namespace BugNET.BLL
                     try
                     {
                         if (projectPath.Length == 0)
-                            throw new ApplicationException(String.Format(LoggingManager.GetErrorMessageResource("UploadPathNotDefined"), project.Name));
+                            projectPath = project.Id.ToString();
+                            //throw new ApplicationException(String.Format(LoggingManager.GetErrorMessageResource("UploadPathNotDefined"), project.Name));
 
                         var attachmentGuid = Guid.NewGuid();
                         var attachmentBytes = entity.Attachment;
@@ -268,6 +269,8 @@ namespace BugNET.BLL
                     //delete IssueAttachment from file system.
                     try
                     {
+                        if (string.IsNullOrEmpty(project.UploadPath))
+                            project.UploadPath = project.Id.ToString();//use project id as pathroot
                         var filePath = String.Format(@"{2}{0}\{1}", project.UploadPath, att.FileName, HostSettingManager.Get(HostSettingNames.AttachmentUploadPath));
 
                         if (filePath.StartsWith("~"))

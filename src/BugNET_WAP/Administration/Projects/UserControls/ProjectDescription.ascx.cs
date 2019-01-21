@@ -71,14 +71,17 @@ namespace BugNET.Administration.Projects.UserControls
                     AllowAttachments.Checked = projectToUpdate.AllowAttachments;
                     chkAllowIssueVoting.Checked = projectToUpdate.AllowIssueVoting;
                     ProjectImage.ImageUrl = string.Format("~/DownloadAttachment.axd?id={0}&mode=project", ProjectId);
-				}
+                    AttachmentStorageType.SelectedValue = (Convert.ToInt32(projectToUpdate.AttachmentStorageType)).ToString();
+
+                }
 			}
 			else
 			{
                 rblAccessType.SelectedIndex = 0;
                 ProjectImage.Visible = false;
                 RemoveProjectImage.Visible = false;
-			}
+                AttachmentStorageType.SelectedValue = (Convert.ToInt32(IssueAttachmentStorageTypes.FileSystem)).ToString();
+            }
 		}
 
         /// <summary>

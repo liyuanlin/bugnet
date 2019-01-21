@@ -15,6 +15,7 @@ namespace BugNET.BLL.Notifications
     using System.Threading;
     using System.ComponentModel;
     using log4net;
+    using MailboxSender;
 
     public class SmtpMailDeliveryService : IMailDeliveryService
     {
@@ -60,34 +61,29 @@ namespace BugNET.BLL.Notifications
                 smtpPassword = HostSettingManager.Get(HostSettingNames.SMTPPassword, string.Empty);
                 smtpDomain = HostSettingManager.Get(HostSettingNames.SMTPDomain, string.Empty);
             }
-
-            var client = new SmtpClient { Host = smtpServer, Port = smtpPort, EnableSsl = smtpUseSSL };
-
-            if (smtpAuthentictation)
-            {
-                client.UseDefaultCredentials = false;
-                client.Credentials = new NetworkCredential(smtpUsername, smtpPassword, smtpDomain);
-            }
-
-            client.SendCompleted += (s, e) =>
-            {
-                if (e.Error != null)
-                {
-                    // log the error message
-                    Log.Error(e.Error);
-                }
-
-                client.Dispose();
-                message.Dispose();
-            };
-
             await Task.Run(() =>
             {
                 try
                 {
-                    client.SendAsync(message, null);
+                     Exception ex= EasySender.SendEmail(message.From.Address, message.To.ToString(),
+                     smtpUseSSL, smtpServer, smtpPort,
+                     smtpAuthentictation, smtpUsername, smtpPassword, smtpDomain, message.Subject, message.Body,
+                     message.IsBodyHtml,
+                     (s, e) =>
+                     {
+                         if (e.Error != null)
+                         {
+                             // log the error message
+                             Log.Error(e.Error);
+                         }
+                     }
+                     );
+                    if (ex!=null)
+                    {
+                        throw ex;
+                    }
                 }
-                catch(Exception e)
+                catch (Exception e)
                 {
                     Log.Error(e);
                 }

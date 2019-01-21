@@ -119,9 +119,10 @@ namespace BugNET.UserInterfaceLayer
                     else
                     {
 
-                        var p = ProjectManager.GetById(IssueManager.GetById(attachment.IssueId).ProjectId);
+                        var p = ProjectManager.GetById(IssueManager.GetById(attachment.IssueId).ProjectId);                        
+                        if (string.IsNullOrEmpty(p.UploadPath))
+                            p.UploadPath = p.Id.ToString();//use project id as pathroot
                         var projectPath = p.UploadPath;
-
                         // append a trailing slash if it doesn't exist
                         if (!projectPath.EndsWith(@"\"))
                             projectPath = String.Concat(projectPath, @"\");

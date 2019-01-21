@@ -2,11 +2,15 @@
 using System.Drawing;
 using System.Net;
 using System.Net.Mail;
+using System.Net.Security;
+using System.Security.Cryptography.X509Certificates;
 using BugNET.BLL;
 using BugNET.BLL.Notifications;
 using BugNET.Common;
 using BugNET.UserInterfaceLayer;
 using log4net;
+using BugNET.MailboxSender.Objects;
+using BugNET.MailboxSender;
 
 namespace BugNET.Administration.Host.UserControls
 {
@@ -31,18 +35,18 @@ namespace BugNET.Administration.Host.UserControls
         /// <returns></returns>
         public bool Update()
         {
-              
-                HostSettingManager.UpdateHostSetting(HostSettingNames.HostEmailAddress, HostEmail.Text);
-                HostSettingManager.UpdateHostSetting(HostSettingNames.SMTPServer, SMTPServer.Text);
-                HostSettingManager.UpdateHostSetting(HostSettingNames.SMTPAuthentication, SMTPEnableAuthentication.Checked.ToString());
-                HostSettingManager.UpdateHostSetting(HostSettingNames.SMTPUsername, SMTPUsername.Text);
-                HostSettingManager.UpdateHostSetting(HostSettingNames.SMTPPassword, SMTPPassword.Text);
-                HostSettingManager.UpdateHostSetting(HostSettingNames.SMTPDomain, SMTPDomain.Text);
-                HostSettingManager.UpdateHostSetting(HostSettingNames.SMTPPort, SMTPPort.Text);
-                HostSettingManager.UpdateHostSetting(HostSettingNames.SMTPUseSSL, SMTPUseSSL.Checked.ToString());
-                HostSettingManager.UpdateHostSetting(HostSettingNames.SMTPEMailFormat, SMTPEmailFormat.SelectedValue);
-                HostSettingManager.UpdateHostSetting(HostSettingNames.SMTPEmailTemplateRoot, SMTPEmailTemplateRoot.Text);
-                return true;
+
+            HostSettingManager.UpdateHostSetting(HostSettingNames.HostEmailAddress, HostEmail.Text);
+            HostSettingManager.UpdateHostSetting(HostSettingNames.SMTPServer, SMTPServer.Text);
+            HostSettingManager.UpdateHostSetting(HostSettingNames.SMTPAuthentication, SMTPEnableAuthentication.Checked.ToString());
+            HostSettingManager.UpdateHostSetting(HostSettingNames.SMTPUsername, SMTPUsername.Text);
+            HostSettingManager.UpdateHostSetting(HostSettingNames.SMTPPassword, SMTPPassword.Text);
+            HostSettingManager.UpdateHostSetting(HostSettingNames.SMTPDomain, SMTPDomain.Text);
+            HostSettingManager.UpdateHostSetting(HostSettingNames.SMTPPort, SMTPPort.Text);
+            HostSettingManager.UpdateHostSetting(HostSettingNames.SMTPUseSSL, SMTPUseSSL.Checked.ToString());
+            HostSettingManager.UpdateHostSetting(HostSettingNames.SMTPEMailFormat, SMTPEmailFormat.SelectedValue);
+            HostSettingManager.UpdateHostSetting(HostSettingNames.SMTPEmailTemplateRoot, SMTPEmailTemplateRoot.Text);
+            return true;
 
         }
 
@@ -82,26 +86,19 @@ namespace BugNET.Administration.Host.UserControls
             {
                 if (!string.IsNullOrEmpty(HostEmail.Text))
                 {
-                    var smtp = new SmtpClient(SMTPServer.Text, int.Parse(SMTPPort.Text))
-                                   {EnableSsl = SMTPUseSSL.Checked};
 
-                    if (SMTPEnableAuthentication.Checked)
-                    {
-                        smtp.UseDefaultCredentials = false;
-                        smtp.Credentials = new NetworkCredential(SMTPUsername.Text, SMTPPassword.Text, SMTPDomain.Text);
+                  Exception exRev=  EasySender.SendEmail(HostEmail.Text, HostEmail.Text, SMTPUseSSL.Checked, SMTPServer.Text, int.Parse(SMTPPort.Text)
+                        , SMTPEnableAuthentication.Checked, SMTPUsername.Text, SMTPPassword.Text, SMTPDomain.Text,
+                        string.Format(GetLocalResourceObject("EmailConfigurationTestSubject").ToString(), "Test"), "<br/>" + DateTime.Now.ToString() + "<br/>", SMTPEmailFormat.SelectedValue == "2", null);
+                    if (exRev == null)
+                    { 
+                        lblEmail.Text = GetLocalResourceObject("EmailConfigurationTestSuccess").ToString();
+                        lblEmail.ForeColor = Color.Green;
                     }
-
-                    var message = new MailMessage(HostEmail.Text, HostEmail.Text,
-                                                  string.Format(
-                                                      GetLocalResourceObject("EmailConfigurationTestSubject").ToString(),
-                                                      HostSettingManager.Get(
-                                                          HostSettingNames.ApplicationTitle)), string.Empty)
-                                      {IsBodyHtml = false};
-
-                    smtp.Send(message);
-
-                    lblEmail.Text = GetLocalResourceObject("EmailConfigurationTestSuccess").ToString();
-                    lblEmail.ForeColor = Color.Green;
+                    else
+                    {
+                        throw exRev;
+                    }
                 }
                 else
                 {
@@ -117,6 +114,11 @@ namespace BugNET.Administration.Host.UserControls
                 Log.Error(GetLocalResourceObject("ConfigurationTestError").ToString(), ex);
             }
 
+        }
+
+        private bool CertificateValidation(object sender, X509Certificate certificate, X509Chain chain, SslPolicyErrors sslPolicyErrors)
+        {
+            return true;
         }
 
         /// <summary>
